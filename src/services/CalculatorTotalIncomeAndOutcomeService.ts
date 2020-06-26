@@ -17,32 +17,16 @@ class CalculatorTotalIncomeAndOutcomeService {
 
   public execute(): ResponseDTO {
 
+    
+    const income = this.transactions
+        .filter((transaction)=>transaction.type == 'income')
+        .map(transaction=> Number(transaction.value))
+        .reduce((total = 0,index =0)=>total + index)
 
-    const onlyIncome = this.transactions.filter((transaction)=>{
-        return transaction.type == 'income'
-      })
-    
-      const valuesIncome = onlyIncome.map(transaction=>{
-        return Number(transaction.value)
-      })
-    
-      const income = valuesIncome.reduce((total = 0,index =0)=>{
-        return total + index
-      })
-    
-    
-      const onlyOutcome = this.transactions.filter((transaction)=>{
-        return transaction.type == 'outcome'
-      })
-    
-      const valuesOutcome = onlyOutcome.map(transaction=>{
-        return Number(transaction.value)
-      })
-    
-      const outcome = valuesOutcome.reduce((total = 0,index =0)=>{
-        return Number(total + index)
-        
-      })
+    const outcome = this.transactions
+        .filter((transaction)=>transaction.type == 'outcome')
+        .map(transaction=> Number(transaction.value))
+        .reduce((total = 0,index =0)=>total + index)
 
       return {income,outcome}
     
