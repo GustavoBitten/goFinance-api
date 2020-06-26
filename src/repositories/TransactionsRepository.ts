@@ -1,6 +1,7 @@
 import Transaction from '../models/Transaction';
 import Balance from '../models/Balance';
 import CreateTransactionService from '../services/CreateTransactionService';
+import CalculatorTotalIncomeAndOutcomeService from '../services/CalculatorTotalIncomeAndOutcomeService';
 
 
 
@@ -29,32 +30,9 @@ class TransactionsRepository {
   public getBalance(): Balance {
 
     
-    const onlyIncome = this.transactions.filter((transaction)=>{
-      return transaction.type == 'income'
-    })
+    const calculatorTotalIncomeAndOutcomeService = new CalculatorTotalIncomeAndOutcomeService(this.transactions)
 
-    const valuesIncome = onlyIncome.map(transaction=>{
-      return Number(transaction.value)
-    })
-
-    const income = valuesIncome.reduce((total = 0,index =0)=>{
-      return total + index
-    })
-
-
-    const onlyOutcome = this.transactions.filter((transaction)=>{
-      return transaction.type == 'outcome'
-    })
-
-    const valuesOutcome = onlyOutcome.map(transaction=>{
-      return Number(transaction.value)
-    })
-
-    const outcome = valuesOutcome.reduce((total = 0,index =0)=>{
-      return Number(total + index)
-      
-    })
-
+    const {income,outcome } = calculatorTotalIncomeAndOutcomeService.execute()
     const balance = new Balance({income,outcome} )
     
     
