@@ -2,7 +2,7 @@ import { Router } from 'express';
 
  import TransactionsRepository from '../repositories/TransactionsRepository';
  import CreateTransactionService from '../services/CreateTransactionService';
-  import Transaction from '../models/Transaction';
+ import TotalExtract from '../models/TotalExtract'
 
 
  interface RequestDTO{
@@ -25,24 +25,15 @@ const transactionRouter = Router();
 transactionRouter.get('/', (request, response) => {
   try {
 
-    class TotalReport{
-     transactions: Transaction[]
-
-     balance:Balance
-
-     constructor({transactions,balance}: TotalReport){
-       this.transactions = transactions
-       this.balance = balance
-     }
-    }
+    
     
     const transactions = transactionsRepository.all()
 
     const balance = transactionsRepository.getBalance()
 
-    const totalReport = new TotalReport({balance,transactions} )
+    const totalExtract = new TotalExtract({balance,transactions} )
     
-    return response.json(totalReport)
+    return response.json(totalExtract)
     
     
     

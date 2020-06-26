@@ -1,4 +1,5 @@
 
+
 class Balance {
     income: number;
 
