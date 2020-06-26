@@ -1,12 +1,9 @@
 import Transaction from '../models/Transaction';
+import Balance from '../models/Balance';
 import CreateTransactionService from '../services/CreateTransactionService';
 
 
-interface Balance {
-  income: number;
-  outcome: number;
-  total: number;
-}
+
 
 interface RequestDTO{
   title: string
@@ -31,11 +28,7 @@ class TransactionsRepository {
   
   public getBalance(): Balance {
 
-    const balance:Balance = {income:0,outcome:0,total:0}
     
-
-
-
     const onlyIncome = this.transactions.filter((transaction)=>{
       return transaction.type == 'income'
     })
@@ -44,12 +37,9 @@ class TransactionsRepository {
       return Number(transaction.value)
     })
 
-    balance.income = valuesIncome.reduce((total = 0,index =0)=>{
+    const income = valuesIncome.reduce((total = 0,index =0)=>{
       return total + index
     })
-
-
-
 
 
     const onlyOutcome = this.transactions.filter((transaction)=>{
@@ -60,16 +50,12 @@ class TransactionsRepository {
       return Number(transaction.value)
     })
 
-    balance.outcome = valuesOutcome.reduce((total = 0,index =0)=>{
+    const outcome = valuesOutcome.reduce((total = 0,index =0)=>{
       return Number(total + index)
       
     })
 
-
-
-
-
-    balance.total = balance.income - balance.outcome
+    const balance = new Balance({income,outcome} )
     
     
     return balance
