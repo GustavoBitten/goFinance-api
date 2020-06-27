@@ -28,7 +28,10 @@ class CalculatorTotalIncomeAndOutcomeService {
         .map(transaction=> Number(transaction.value))
         .reduce((total = 0,index =0)=>total + index)
 
-      return {income,outcome}
+      
+      
+      
+        return {income,outcome}
     
   }
 }

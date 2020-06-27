@@ -29,16 +29,20 @@ class TransactionsRepository {
   
   public getBalance(): Balance {
 
-    
-    const calculatorTotalIncomeAndOutcomeService = new CalculatorTotalIncomeAndOutcomeService(this.transactions)
+    if(this.transactions.length != 0 ){
+        
+      const calculatorTotalIncomeAndOutcomeService = new CalculatorTotalIncomeAndOutcomeService(this.transactions)
+      
+      const {income,outcome } = calculatorTotalIncomeAndOutcomeService.execute()
 
-    const {income,outcome } = calculatorTotalIncomeAndOutcomeService.execute()
-    const balance = new Balance({income,outcome} )
-    
-    
-    return balance
+      const balance = new Balance({income,outcome} )
+      return balance
+      
+    }else{
 
-
+      const balance = new Balance({income:0,outcome:0} )
+      return balance
+    }
   } 
   
   public create({title,value,type}: RequestDTO): Transaction {
