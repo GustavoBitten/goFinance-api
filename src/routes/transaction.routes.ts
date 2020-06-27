@@ -47,6 +47,12 @@ transactionRouter.post('/', (request, response) => {
     TransactionsRepository
     
     const {title,value,type} = request.body
+
+    if(transactionsRepository.getBalance().total - value < 0 && type == 'outcome' ){
+
+        return response.status(400).json( { error:'insufficient funds'});
+
+    }
     
     const createTransactionService = new CreateTransactionService(transactionsRepository)
     
