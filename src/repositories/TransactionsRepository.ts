@@ -1,91 +1,17 @@
+import { EntityRepository, Repository } from 'typeorm';
+
 import Transaction from '../models/Transaction';
-import Balance from '../models/Balance';
-import CreateTransactionService from '../services/CreateTransactionService';
-import CalculatorTotalIncomeAndOutcomeService from '../services/CalculatorTotalIncomeAndOutcomeService';
 
-
-
-
-interface RequestDTO {
-  title: string
-  value: number
-  type: 'income' | 'outcome'
-
+interface Balance {
+  income: number;
+  outcome: number;
+  total: number;
 }
 
-
-class TransactionsRepository {
-  private transactions: Transaction[];
-
-  constructor() {
-    this.transactions = [];
-  }
-
-  public all(): Transaction[] {
-
-    return this.transactions
-
-  }
-
-  public getBalance(): Balance {
-
-    if (this.transactions.length == 0) {
-
-      const balance = new Balance({
-        income: 0,
-        outcome: 0
-      })
-      return balance
-
-    } else if (this.transactions.filter((transaction) => transaction.type == 'outcome').length == 0) {
-
-      const income = this.transactions
-        .map((transaction) => transaction.value)
-        .reduce((total = 0, index = 0) => total + index)
-
-      const balance = new Balance({
-        income,
-        outcome: 0
-      })
-      return balance
-
-    } else {
-
-      const calculatorTotalIncomeAndOutcomeService = new CalculatorTotalIncomeAndOutcomeService(this.transactions)
-
-      const {
-        income,
-        outcome
-      } = calculatorTotalIncomeAndOutcomeService.execute()
-
-      const balance = new Balance({
-        income,
-        outcome
-      })
-      
-      return balance
-
-
-    }
-  }
-
-  public create({
-    title,
-    value,
-    type
-  }: RequestDTO): Transaction {
-
-
-    const trasaction = new Transaction({
-      title,
-      type,
-      value
-    })
-
-    this.transactions.push(trasaction)
-
+@EntityRepository(Transaction)
+class TransactionsRepository extends Repository<Transaction> {
+  public async getBalance(): Promise<Balance> {
     // TODO
-    return trasaction
   }
 }
 
