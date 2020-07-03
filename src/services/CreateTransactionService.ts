@@ -1,8 +1,9 @@
 // import AppError from '../errors/AppError';
 
 import Transaction from '../models/Transaction';
-import { getRepository } from 'typeorm';
+import { getRepository, getCustomRepository, TransactionRepository } from 'typeorm';
 import Category from '../models/Category';
+import TransactionsRepository from '../repositories/TransactionsRepository';
 
 interface RequestDTO{
   title: string
@@ -17,7 +18,7 @@ interface RequestDTO{
 class CreateTransactionService {
   public async execute({category,title,type,value}: RequestDTO): Promise<Transaction> {
     // TODO
-    const transactionsRepository = getRepository(Transaction)
+    const transactionsRepository = getCustomRepository(TransactionsRepository)
 
     const categoreisRepository = getRepository(Category)
 
@@ -31,7 +32,7 @@ class CreateTransactionService {
       category_id = newCategory.id
 
     }else{
-      
+
       category_id = checkExistCategory.id
     }
 
