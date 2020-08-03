@@ -4,6 +4,7 @@ import Transaction from '../models/Transaction';
 import { getRepository, getCustomRepository, TransactionRepository } from 'typeorm';
 import Category from '../models/Category';
 import TransactionsRepository from '../repositories/TransactionsRepository';
+import AppError from '../errors/AppError';
 
 interface RequestDTO{
   title: string
@@ -34,6 +35,14 @@ class CreateTransactionService {
     }else{
 
       category_id = checkExistCategory.id
+    }
+    const currentBalance = await transactionsRepository.getBalance()
+
+    if(type == 'outcome' && currentBalance.total - value < 0 ){
+
+      throw new AppError("you don't have balance for this outcome",400);
+            
+
     }
 
     const transaction = transactionsRepository.create({title,type,value,category_id})
