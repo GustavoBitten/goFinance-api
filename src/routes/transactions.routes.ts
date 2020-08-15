@@ -5,6 +5,7 @@ import TransactionsRepository from '../repositories/TransactionsRepository';
 import AppError from '../errors/AppError';
 import uploadConfig from '../config/upload';
 import multer from 'multer';
+import ImportTransactionsService from '../services/ImportTransactionsService';
 
 
 // import TransactionsRepository from '../repositories/TransactionsRepository';
@@ -33,7 +34,6 @@ transactionsRouter.post('/', async (request, response) => {
   const { title,value, type, category } = request.body
 
   const createTransactionService = new CreateTransactionService
-
   const transaction =  await createTransactionService.execute({title, value,type,category})
 
   return response.json(transaction) 
@@ -59,10 +59,12 @@ transactionsRouter.delete('/:id', async (request, response) => {
 
 transactionsRouter.post('/import', upload.single('csv'), async (request, response) => {
   // TODO
+  const importTransactionsService = new ImportTransactionsService
   
+  const importData = await importTransactionsService.execute(request.file.filename)
 
-  response.send(request.file.filename)
-
+  response.json(importData)
 });
 
 export default transactionsRouter;
+ 
